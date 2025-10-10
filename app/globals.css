@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Layout base */
+html, body {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+/* PDF Clean */
+@page {
+  size: A4;
+  margin: 12mm;
+}
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  html, body {
+    background: white !important;
+  }
+  .card {
+    box-shadow: none !important;
+  }
+}
