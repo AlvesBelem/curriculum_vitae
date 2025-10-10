@@ -3,8 +3,8 @@
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { FaWhatsapp } from "react-icons/fa";
 
-/* eslint-disable-next-line @next/next/no-img-element */
 function AnimatedSection({ children, delay = 0 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-40px" });
@@ -48,7 +48,10 @@ export default function Page() {
 
   return (
     <main className="flex justify-center py-8 px-4">
-      <div className="card bg-white shadow-2xl max-w-5xl w-full overflow-hidden" id="cv">
+      <div
+        className="card bg-white shadow-2xl max-w-5xl w-full overflow-hidden"
+        id="cv"
+      >
         <div className="flex flex-col md:flex-row">
           {/* Coluna Esquerda */}
           <aside className="bg-dark text-white w-full md:w-1/3 p-6 md:p-8 flex flex-col items-center">
@@ -67,7 +70,7 @@ export default function Page() {
               Marcelo Alberto Alves Nogueira
             </h1>
             <p className="text-sm text-gray-300 mb-6 text-center">
-              Analista de Suporte
+              Analista de Suporte & Dev FullStack
             </p>
 
             <AnimatedSection delay={0.1}>
@@ -76,7 +79,17 @@ export default function Page() {
                   CONTATO
                 </h2>
                 <ul className="text-sm space-y-2">
-                  <li>📞 (91) 99287-6466</li>
+                  <li className="flex items-center gap-2">
+                    <FaWhatsapp className="text-green-400" />
+                    <a
+                      href="https://wa.me/5591992876466"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:underline"
+                    >
+                      (91) 99287-6466
+                    </a>
+                  </li>
                   <li>✉️ marcelo.alves28@gmail.com</li>
                   <li>📍 Belém – PA</li>
                 </ul>
@@ -91,6 +104,9 @@ export default function Page() {
                 <ul className="text-sm space-y-2">
                   <li>🎓 Segundo grau completo</li>
                   <li>💻 Curso Full Stack – Digital House</li>
+                  <li>
+                    🎓 Em curso Análise e desenvolvimento de sistema - Unama
+                  </li>
                 </ul>
               </section>
             </AnimatedSection>
@@ -106,6 +122,7 @@ export default function Page() {
                   <li>• SQL Server / PostgreSQL</li>
                   <li>• CorelDRAW / Photoshop</li>
                   <li>• Comunicação e atendimento</li>
+                  <li>• Nextjs / Python / Prisma / Chadcn</li>
                 </ul>
               </section>
             </AnimatedSection>
@@ -129,10 +146,36 @@ export default function Page() {
                   PERFIL PROFISSIONAL
                 </h2>
                 <p className="text-slate-700 text-sm leading-6">
-                  Profissional com sólida experiência em suporte técnico e implantação
-                  de sistemas ERP e automação comercial. Forte atuação na resolução
-                  de problemas de rede, migração de dados e treinamento de usuários.
-                  Experiência adicional em design gráfico e artes visuais.
+                  Com uma trajetória sólida em <strong>tecnologia</strong> e{" "}
+                  <strong>design gráfico</strong>, iniciei meu contato com a
+                  computação aos 9 anos de idade e logo mergulhei no design
+                  utilizando o CorelDRAW desde os 12 anos. Ao longo de mais de
+                  uma década, acumulei experiência em <strong>design</strong> e{" "}
+                  <strong>diagramação</strong>, atuando inclusive em jornais de
+                  diferentes estados, como em Macapá, no Amapá.
+                </p>
+                <p className="text-slate-700 text-sm leading-6 mt-4">
+                  Minha transição para a área de{" "}
+                  <strong>suporte técnico</strong> aconteceu em 2010, quando
+                  ingressei na Alterdata, onde permaneci por 12 anos. Durante
+                  esse período, desenvolvi habilidades técnicas robustas,
+                  incluindo conhecimento avançado em{" "}
+                  <strong>bancos de dados</strong> e suporte a sistemas.
+                </p>
+                <p className="text-slate-700 text-sm leading-6 mt-4">
+                  A partir de 2019, aprofundei meus conhecimentos em{" "}
+                  <strong>programação</strong> e{" "}
+                  <strong>desenvolvimento full-stack</strong>, dominando
+                  ferramentas modernas como <strong>Next.js</strong>,{" "}
+                  <strong>Prisma</strong>, <strong>ChadCN</strong> e{" "}
+                  <strong>Python</strong>.
+                </p>
+                <p className="text-slate-700 text-sm leading-6 mt-4">
+                  Estou sempre em busca de unir <strong>design</strong> e{" "}
+                  <strong>desenvolvimento</strong> com <strong>inovação</strong>
+                  , criando soluções tecnológicas completas e eficientes. Meu
+                  foco é oferecer um trabalho de alta qualidade, com base em
+                  anos de experiência e uma constante evolução profissional.
                 </p>
               </div>
             </AnimatedSection>
@@ -144,20 +187,28 @@ export default function Page() {
                 </h2>
                 <ul className="text-sm text-slate-700 space-y-3">
                   <li>
-                    <strong>Alterdata Software</strong> — Analista de Suporte (2010–2022)<br />
-                    Instalação, implantação e treinamento de sistemas ERP e automação comercial.
-                    Diagnóstico de rede e migração de bases via Excel → SQL Server / PostgreSQL.
+                    <strong>Alterdata Software</strong> — Analista de Suporte
+                    (2010–2022)
+                    <br />
+                    Instalação, implantação e treinamento de sistemas ERP e
+                    automação comercial. Diagnóstico de rede e migração de bases
+                    via Excel → SQL Server / PostgreSQL.
                   </li>
                   <li>
-                    <strong>Anny By</strong> — Digitador, Designer Gráfico (2007–2010)<br />
-                    Criação de layouts de serigrafia e manipulação de bordados digitais.
+                    <strong>Anny By</strong> — Digitador, Designer Gráfico
+                    (2007–2010)
+                    <br />
+                    Criação de layouts de serigrafia e manipulação de bordados
+                    digitais.
                   </li>
                   <li>
-                    <strong>Autônomo</strong> — Designer Gráfico (2000–2006)<br />
+                    <strong>Autônomo</strong> — Designer Gráfico (2000–2006)
+                    <br />
                     Criação de logomarcas, panfletos e materiais impressos.
                   </li>
                   <li>
-                    <strong>Diário do Amapá</strong> — Diagramador (1998–1999)<br />
+                    <strong>Diário do Amapá</strong> — Diagramador (1998–1999)
+                    <br />
                     Diagramação e tratamento de imagens para mídia impressa.
                   </li>
                 </ul>
