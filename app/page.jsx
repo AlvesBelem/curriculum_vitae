@@ -187,6 +187,12 @@ export default function Page() {
                 </h2>
                 <ul className="text-sm text-slate-700 space-y-3">
                   <li>
+                    <strong>FreeLancer</strong> — Programação
+                    (2022–2025)
+                    <br />
+                    Construção e implantação de lojas virtuais.
+                  </li>
+                  <li>
                     <strong>Alterdata Software</strong> — Analista de Suporte
                     (2010–2022)
                     <br />
