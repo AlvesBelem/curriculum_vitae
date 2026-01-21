@@ -155,10 +155,11 @@ export default function Page() {
                 <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-primary">
                   <Image
                     src="/foto.png"
-                    alt="Foto de Marcelo"
+                    alt="Marcelo Nogueira - Desenvolvedor Full-Stack e Especialista em TI"
                     width={112}
                     height={112}
                     className="object-cover w-full h-full"
+                    priority
                   />
                 </div>
               </div>
