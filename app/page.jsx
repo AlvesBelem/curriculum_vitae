@@ -59,7 +59,6 @@ function TechnicalList({ entries }) {
 export default function Page() {
   const [ready, setReady] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [shareSupported, setShareSupported] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -75,7 +74,6 @@ export default function Page() {
     if (typeof navigator === "undefined") return;
     const mobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     setIsMobile(mobile);
-    setShareSupported(mobile && !!navigator.share);
   }, []);
 
   const handleDownload = () => {
@@ -89,27 +87,31 @@ export default function Page() {
     if (!cv) return;
     const blob = await window.html2pdf().set(pdfOptions).from(cv).toBlob();
     const file = new File([blob], pdfOptions.filename, { type: "application/pdf" });
-    const shareData = {
-      title: "Currículo Marcelo",
-      text: "Currículo Executivo – Marcelo Alberto Alves Nogueira",
-      files: [file],
-    };
+    if (!navigator.share) {
+      handleDownload();
+      return;
+    }
+
     try {
-    if (navigator.canShare?.({ files: [file] })) {
-      await navigator.share(shareData);
-    } else if (navigator.share) {
-      delete shareData.files;
-      await navigator.share(shareData);
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          title: "Currículo Marcelo",
+          text: "Currículo Executivo – Marcelo Alberto Alves Nogueira",
+          files: [file],
+        });
       } else {
-        window.html2pdf().set(pdfOptions).from(cv).save();
+        await navigator.share({
+          title: "Currículo Marcelo",
+          text: "Currículo Executivo – Marcelo Alberto Alves Nogueira",
+        });
       }
     } catch {
-      window.html2pdf().set(pdfOptions).from(cv).save();
+      handleDownload();
     }
   };
 
   const handlePrimaryAction = async () => {
-    if (isMobile && shareSupported) {
+    if (isMobile) {
       await handleShare();
       return;
     }
