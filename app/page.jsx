@@ -56,29 +56,91 @@ function TechnicalList({ entries }) {
   );
 }
 
+const sharePdfUrl = "/curriculo%20Marcelo%20Alves%20mobile.pdf";
+
 export default function Page() {
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const [shareSupported, setShareSupported] = useState(false);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      if (window.html2pdf) {
-        setReady(true);
-        clearInterval(timer);
-      }
-    }, 200);
-    return () => clearInterval(timer);
+    // keep placeholder in case html2pdf is reintroduced
+    setReady(true);
+  }, []);
+  useEffect(() => {
+    if (typeof navigator === "undefined") return;
+    const mobileUa = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    setIsMobile(mobileUa);
+    setShareSupported(mobileUa && !!navigator.share);
   }, []);
 
-  const handleDownload = () => {
-    const cv = document.getElementById("cv");
-    if (!cv) return;
-    window.html2pdf().set(pdfOptions).from(cv).save();
+  const a4PdfUrl = "/curriculo%20Marcelo%20Alves%20A4.pdf";
+
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(a4PdfUrl);
+      if (!response.ok) return;
+      const blob = await response.blob();
+      const fileURL = window.URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = fileURL;
+      anchor.download = "Curriculo-Marcelo-Alves-Nogueira.pdf";
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      window.URL.revokeObjectURL(fileURL);
+    } catch {
+      // fallback to generated file (if html2pdf available)
+      const cv = document.getElementById("cv");
+      if (!cv || !window.html2pdf) return;
+      window.html2pdf().set(pdfOptions).from(cv).save();
+    }
   };
+
+  const handleShare = async () => {
+    if (!shareSupported) {
+      handleDownload();
+      return;
+    }
+
+    try {
+      const response = await fetch(sharePdfUrl);
+      if (!response.ok) {
+        handleDownload();
+        return;
+      }
+      const blob = await response.blob();
+      const file = new File([blob], "Curriculo-Marcelo-Alves-mobile.pdf", {
+        type: "application/pdf",
+      });
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          title: "Currículo Marcelo",
+          text: "Currículo Executivo – Marcelo Alberto Alves Nogueira",
+          files: [file],
+        });
+      } else {
+        await navigator.share({
+          title: "Currículo Marcelo",
+          text: "Currículo Executivo – Marcelo Alberto Alves Nogueira",
+        });
+      }
+    } catch {
+      handleDownload();
+    }
+  };
+
+  const shouldShare = isMobile && shareSupported;
+
   const handlePrimaryAction = async () => {
+    if (shouldShare) {
+      await handleShare();
+      return;
+    }
     handleDownload();
   };
 
-  const actionLabel = "Baixar PDF";
+  const actionLabel = shouldShare ? "Compartilhar PDF" : "Baixar PDF";
 
   return (
     <main className="flex min-h-screen justify-center bg-slate-100 py-6 px-4 sm:px-6">
