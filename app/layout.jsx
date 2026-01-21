@@ -86,7 +86,7 @@ export default function RootLayout({ children }) {
     },
     sameAs: [
       "https://github.com/AlvesBelem",
-      "https://www.linkedin.com/in/marcelo-nogueira-alves", // Sugestão: verificar URL correta
+      "https://www.linkedin.com/in/alvesbelem/",
     ],
     knowsAbout: [
       "Desenvolvimento de Software",

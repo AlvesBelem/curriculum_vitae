@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { FaEnvelope, FaGithub, FaMapMarkerAlt, FaWhatsapp } from "react-icons/fa";
+import { FaEnvelope, FaGithub, FaLinkedin, FaMapMarkerAlt, FaWhatsapp } from "react-icons/fa";
 
 const pdfOptions = {
   margin: 5,
@@ -197,6 +197,17 @@ export default function Page() {
                       marcelo.alves28@gmail.com
                     </a>
                   </li>
+                  <li className="flex flex-wrap items-center gap-2">
+                      <FaLinkedin className="text-white text-base" />
+                      <a
+                        href="https://www.linkedin.com/in/alvesbelem/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:underline"
+                      >
+                        linkedin.com/in/alvesbelem
+                      </a>
+                    </li>
                     <li className="flex flex-wrap items-center gap-2">
                       <FaGithub className="text-white text-base" />
                       <a
