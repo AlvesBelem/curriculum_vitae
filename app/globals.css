@@ -23,4 +23,22 @@ html, body {
   .card {
     box-shadow: none !important;
   }
+  #cv {
+    padding: 10mm !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+  .print-tight {
+    margin-bottom: 0.35rem !important;
+  }
+  .print-small {
+    font-size: 11px !important;
+    line-height: 1.3 !important;
+  }
+  .print-no-break {
+    page-break-inside: avoid !important;
+  }
+  .print-condensed-gap {
+    gap: 0.65rem !important;
+  }
 }

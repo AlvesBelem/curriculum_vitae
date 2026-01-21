@@ -88,7 +88,7 @@ export default function Page() {
           id="cv"
         >
           <div className="grid gap-6 md:grid-cols-[300px_1fr]">
-            <aside className="bg-dark text-white p-6 md:p-8 flex flex-col gap-6 items-start">
+            <aside className="bg-dark text-white p-6 md:p-8 flex flex-col gap-6 items-start print-condensed-gap">
               <div className="w-full flex justify-center">
                 <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-primary">
                   <Image
@@ -109,7 +109,7 @@ export default function Page() {
               </div>
 
               <AnimatedSection delay={0.05}>
-                <section className="w-full space-y-2 text-sm text-left">
+                <section className="w-full space-y-2 text-sm text-left print-tight print-small print-no-break">
                   <h2 className="text-primary font-semibold text-xs tracking-wide uppercase">
                     Contato
                   </h2>
@@ -154,7 +154,7 @@ export default function Page() {
               </AnimatedSection>
 
               <AnimatedSection delay={0.1}>
-                <section className="w-full space-y-2 text-sm text-left">
+                <section className="w-full space-y-2 text-sm text-left print-tight print-small print-no-break">
                   <h2 className="text-primary font-semibold text-xs tracking-wide uppercase">
                     Formação
                   </h2>
@@ -166,7 +166,7 @@ export default function Page() {
               </AnimatedSection>
 
               <AnimatedSection delay={0.15}>
-                <section className="w-full space-y-2 text-sm text-left">
+                <section className="w-full space-y-2 text-sm text-left print-tight print-small print-no-break">
                   <h2 className="text-primary font-semibold text-xs tracking-wide uppercase">
                     Idiomas
                   </h2>
@@ -175,7 +175,7 @@ export default function Page() {
               </AnimatedSection>
 
               <AnimatedSection delay={0.2}>
-                <section className="w-full space-y-2 text-sm text-left">
+                <section className="w-full space-y-2 text-sm text-left print-tight print-small print-no-break">
                   <h2 className="text-primary font-semibold text-xs tracking-wide uppercase">
                     Próximos Cursos (2026)
                   </h2>
@@ -201,7 +201,7 @@ export default function Page() {
               </div>
 
               <AnimatedSection delay={0.25}>
-                <div className="space-y-3">
+                <div className="space-y-3 print-tight print-small print-no-break">
                   <h2 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-1">
                     Posicionamento Profissional
                   </h2>
@@ -212,7 +212,7 @@ export default function Page() {
               </AnimatedSection>
 
               <AnimatedSection delay={0.3}>
-                <div className="space-y-3">
+                <div className="space-y-3 print-tight print-small print-no-break">
                   <h2 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-1">
                     Resumo Executivo
                   </h2>
@@ -228,7 +228,7 @@ export default function Page() {
               </AnimatedSection>
 
               <AnimatedSection delay={0.35}>
-                <div className="space-y-6 text-sm text-slate-700">
+                <div className="space-y-6 text-sm text-slate-700 print-tight print-small print-no-break">
                   <h2 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-1">
                     Experiência Profissional
                   </h2>
@@ -293,7 +293,7 @@ export default function Page() {
               </AnimatedSection>
 
               <AnimatedSection delay={0.4}>
-                <div className="space-y-4 text-sm text-slate-700">
+                <div className="space-y-4 text-sm text-slate-700 print-tight print-small print-no-break">
                   <h2 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-1">
                     Competências Técnicas
                   </h2>
@@ -326,7 +326,7 @@ export default function Page() {
               </AnimatedSection>
 
               <AnimatedSection delay={0.45}>
-                <div className="space-y-3 text-sm text-slate-700">
+                <div className="space-y-3 text-sm text-slate-700 print-tight print-small print-no-break">
                   <h2 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-1">
                     Inteligência Artificial & Dados
                   </h2>
@@ -339,7 +339,7 @@ export default function Page() {
               </AnimatedSection>
 
               <AnimatedSection delay={0.5}>
-                <div className="space-y-3 text-sm text-slate-700">
+                <div className="space-y-3 text-sm text-slate-700 print-tight print-small print-no-break">
                   <h2 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-1">
                     Cursos e Certificações
                   </h2>
@@ -355,7 +355,7 @@ export default function Page() {
               </AnimatedSection>
 
               <AnimatedSection delay={0.55}>
-                <div className="space-y-3 text-sm text-slate-700">
+                <div className="space-y-3 text-sm text-slate-700 print-tight print-small print-no-break">
                   <h2 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-1">
                     Perfil Comportamental
                   </h2>
