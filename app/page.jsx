@@ -58,7 +58,6 @@ function TechnicalList({ entries }) {
 
 export default function Page() {
   const [ready, setReady] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -70,55 +69,16 @@ export default function Page() {
     return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    if (typeof navigator === "undefined") return;
-    const mobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    setIsMobile(mobile);
-  }, []);
-
   const handleDownload = () => {
     const cv = document.getElementById("cv");
     if (!cv) return;
     window.html2pdf().set(pdfOptions).from(cv).save();
   };
-
-  const handleShare = async () => {
-    const cv = document.getElementById("cv");
-    if (!cv) return;
-    const blob = await window.html2pdf().set(pdfOptions).from(cv).toBlob();
-    const file = new File([blob], pdfOptions.filename, { type: "application/pdf" });
-    if (!navigator.share) {
-      handleDownload();
-      return;
-    }
-
-    try {
-      if (navigator.canShare?.({ files: [file] })) {
-        await navigator.share({
-          title: "Currículo Marcelo",
-          text: "Currículo Executivo – Marcelo Alberto Alves Nogueira",
-          files: [file],
-        });
-      } else {
-        await navigator.share({
-          title: "Currículo Marcelo",
-          text: "Currículo Executivo – Marcelo Alberto Alves Nogueira",
-        });
-      }
-    } catch {
-      handleDownload();
-    }
-  };
-
   const handlePrimaryAction = async () => {
-    if (isMobile) {
-      await handleShare();
-      return;
-    }
     handleDownload();
   };
 
-  const actionLabel = isMobile ? "Compartilhar PDF" : "Baixar PDF";
+  const actionLabel = "Baixar PDF";
 
   return (
     <main className="flex min-h-screen justify-center bg-slate-100 py-6 px-4 sm:px-6">
