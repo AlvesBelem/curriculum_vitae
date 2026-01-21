@@ -3,7 +3,15 @@
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { FaWhatsapp } from "react-icons/fa";
+import { FaEnvelope, FaGithub, FaMapMarkerAlt, FaWhatsapp } from "react-icons/fa";
+
+const pdfOptions = {
+  margin: 5,
+  filename: "Curriculo-Marcelo-Alberto-Alves-Nogueira.pdf",
+  image: { type: "jpeg", quality: 0.98 },
+  html2canvas: { scale: 2 },
+  jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+};
 
 function AnimatedSection({ children, delay = 0 }) {
   const ref = useRef(null);
@@ -21,8 +29,37 @@ function AnimatedSection({ children, delay = 0 }) {
   );
 }
 
+function ExperienceItem({ title, period, items }) {
+  return (
+    <div className="space-y-1">
+      <p className="font-semibold text-slate-900">{title}</p>
+      <p className="text-xs text-slate-500">{period}</p>
+      <ul className="list-disc space-y-1 pl-5 text-sm text-slate-600">
+        {items.map((item, index) => (
+          <li key={`${title}-${index}`}>{item}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function TechnicalList({ entries }) {
+  return (
+    <>
+      {entries.map((entry) => (
+        <div key={entry.title}>
+          <p className="font-semibold text-slate-800">{entry.title}</p>
+          <p className="text-slate-700 text-sm">{entry.detail}</p>
+        </div>
+      ))}
+    </>
+  );
+}
+
 export default function Page() {
   const [ready, setReady] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [shareSupported, setShareSupported] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -34,207 +71,343 @@ export default function Page() {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    if (typeof navigator === "undefined") return;
+    const mobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    setIsMobile(mobile);
+    setShareSupported(mobile && !!navigator.share);
+  }, []);
+
   const handleDownload = () => {
     const cv = document.getElementById("cv");
-    const opt = {
-      margin: 5,
-      filename: "Curriculo-Marcelo-Alberto-Alves-Nogueira.pdf",
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-    };
-    window.html2pdf().set(opt).from(cv).save();
+    if (!cv) return;
+    window.html2pdf().set(pdfOptions).from(cv).save();
   };
 
+  const handleShare = async () => {
+    const cv = document.getElementById("cv");
+    if (!cv) return;
+    const blob = await window.html2pdf().set(pdfOptions).from(cv).toBlob();
+    const file = new File([blob], pdfOptions.filename, { type: "application/pdf" });
+    const shareData = {
+      title: "Currículo Marcelo",
+      text: "Currículo Executivo – Marcelo Alberto Alves Nogueira",
+      files: [file],
+    };
+    try {
+    if (navigator.canShare?.({ files: [file] })) {
+      await navigator.share(shareData);
+    } else if (navigator.share) {
+      delete shareData.files;
+      await navigator.share(shareData);
+      } else {
+        window.html2pdf().set(pdfOptions).from(cv).save();
+      }
+    } catch {
+      window.html2pdf().set(pdfOptions).from(cv).save();
+    }
+  };
+
+  const handlePrimaryAction = async () => {
+    if (isMobile && shareSupported) {
+      await handleShare();
+      return;
+    }
+    handleDownload();
+  };
+
+  const actionLabel = isMobile ? "Compartilhar PDF" : "Baixar PDF";
+
   return (
-    <main className="flex justify-center py-8 px-4">
-      <div
-        className="card bg-white shadow-2xl max-w-5xl w-full overflow-hidden"
-        id="cv"
-      >
-        <div className="flex flex-col md:flex-row">
-          {/* Coluna Esquerda */}
-          <aside className="bg-dark text-white w-full md:w-1/3 p-6 md:p-8 flex flex-col items-center">
-            {/* Foto */}
-            <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-primary mb-4">
-              <Image
-                src="/foto.png"
-                alt="Foto de Marcelo"
-                width={128}
-                height={128}
-                className="object-cover w-full h-full"
-              />
-            </div>
+    <main className="flex min-h-screen justify-center bg-slate-100 py-6 px-4 sm:px-6">
+      <div className="w-full max-w-5xl">
+        <div
+          className="card bg-white shadow-2xl rounded-3xl overflow-hidden border border-slate-100"
+          id="cv"
+        >
+          <div className="grid gap-6 md:grid-cols-[300px_1fr]">
+            <aside className="bg-dark text-white p-6 md:p-8 flex flex-col gap-6 items-start">
+              <div className="w-full flex justify-center">
+                <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-primary">
+                  <Image
+                    src="/foto.png"
+                    alt="Foto de Marcelo"
+                    width={112}
+                    height={112}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+              </div>
 
-            <h1 className="text-2xl font-bold text-center">
-              Marcelo Alberto Alves Nogueira
-            </h1>
-            <p className="text-sm text-gray-300 mb-6 text-center">
-              Analista de Suporte & Dev FullStack
-            </p>
+              <div className="w-full text-left space-y-1">
+                <h1 className="text-2xl font-bold">Marcelo Alberto Alves Nogueira</h1>
+                <p className="text-sm text-gray-300">
+                  Currículo Executivo – Tecnologia, Sistemas & Soluções Digitais
+                </p>
+              </div>
 
-            <AnimatedSection delay={0.1}>
-              <section className="w-full mb-6">
-                <h2 className="text-primary font-semibold text-sm mb-2">
-                  CONTATO
-                </h2>
-                <ul className="text-sm space-y-2">
-                  <li className="flex items-center gap-2">
-                    <FaWhatsapp className="text-green-400" />
-                    <a
-                      href="https://wa.me/5591992876466"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:underline"
+              <AnimatedSection delay={0.05}>
+                <section className="w-full space-y-2 text-sm text-left">
+                  <h2 className="text-primary font-semibold text-xs tracking-wide uppercase">
+                    Contato
+                  </h2>
+                  <ul className="space-y-2">
+                    <li className="flex flex-wrap items-center gap-2">
+                      <FaWhatsapp className="text-white text-base" />
+                      <a
+                        href="https://wa.me/5591992876466"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:underline"
                     >
-                      (91) 99287-6466
+                      (91) 99287-6466 (WhatsApp)
                     </a>
                   </li>
-                  <li>✉️ marcelo.alves28@gmail.com</li>
-                  <li>📍 Belém – PA</li>
-                </ul>
-              </section>
-            </AnimatedSection>
-
-            <AnimatedSection delay={0.2}>
-              <section className="w-full mb-6">
-                <h2 className="text-primary font-semibold text-sm mb-2">
-                  FORMAÇÃO
-                </h2>
-                <ul className="text-sm space-y-2">
-                  <li>🎓 Segundo grau completo</li>
-                  <li>💻 Curso Full Stack – Digital House</li>
-                  <li>
-                    🎓 Em curso Análise e desenvolvimento de sistema - Unama
+                    <li className="flex flex-wrap items-center gap-2">
+                      <FaEnvelope className="text-white text-base" />
+                      <a
+                        href="mailto:marcelo.alves28@gmail.com"
+                        className="hover:underline"
+                    >
+                      marcelo.alves28@gmail.com
+                    </a>
                   </li>
-                </ul>
-              </section>
-            </AnimatedSection>
+                    <li className="flex flex-wrap items-center gap-2">
+                      <FaGithub className="text-white text-base" />
+                      <a
+                        href="https://github.com/AlvesBelem"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:underline"
+                    >
+                      github.com/AlvesBelem
+                    </a>
+                  </li>
+                    <li className="flex flex-wrap items-center gap-2">
+                      <FaMapMarkerAlt className="text-white text-base" />
+                      <span>Belem - PA</span>
+                    </li>
+                  </ul>
+                </section>
+              </AnimatedSection>
 
-            <AnimatedSection delay={0.3}>
-              <section className="w-full">
-                <h2 className="text-primary font-semibold text-sm mb-2">
-                  HABILIDADES
-                </h2>
-                <ul className="text-sm space-y-1">
-                  <li>• Suporte técnico e redes</li>
-                  <li>• Windows, Word, Excel</li>
-                  <li>• SQL Server / PostgreSQL</li>
-                  <li>• CorelDRAW / Photoshop</li>
-                  <li>• Comunicação e atendimento</li>
-                  <li>• Nextjs / Python / Prisma / Chadcn</li>
-                </ul>
-              </section>
-            </AnimatedSection>
-          </aside>
+              <AnimatedSection delay={0.1}>
+                <section className="w-full space-y-2 text-sm text-left">
+                  <h2 className="text-primary font-semibold text-xs tracking-wide uppercase">
+                    Formação
+                  </h2>
+                  <ul className="space-y-1">
+                    <li>Análise e Desenvolvimento de Sistemas - UNAMA (3º semestre)</li>
+                    <li>Ensino Médio Completo</li>
+                  </ul>
+                </section>
+              </AnimatedSection>
 
-          {/* Coluna Direita */}
-          <section className="w-full md:w-2/3 p-6 md:p-10 space-y-8">
-            <div className="no-print flex justify-end">
-              <button
-                onClick={handleDownload}
-                disabled={!ready}
-                className="btn border border-slate-300 px-4 py-2 rounded-lg shadow-sm hover:shadow-md"
-              >
-                📄 Baixar PDF
-              </button>
-            </div>
+              <AnimatedSection delay={0.15}>
+                <section className="w-full space-y-2 text-sm text-left">
+                  <h2 className="text-primary font-semibold text-xs tracking-wide uppercase">
+                    Idiomas
+                  </h2>
+                  <p>Inglês - Básico</p>
+                </section>
+              </AnimatedSection>
 
-            <AnimatedSection delay={0.1}>
-              <div>
-                <h2 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-1 mb-3">
-                  PERFIL PROFISSIONAL
-                </h2>
-                <p className="text-slate-700 text-sm leading-6">
-                  Com uma trajetória sólida em <strong>tecnologia</strong> e{" "}
-                  <strong>design gráfico</strong>, iniciei meu contato com a
-                  computação aos 9 anos de idade e logo mergulhei no design
-                  utilizando o CorelDRAW desde os 12 anos. Ao longo de mais de
-                  uma década, acumulei experiência em <strong>design</strong> e{" "}
-                  <strong>diagramação</strong>, atuando inclusive em jornais de
-                  diferentes estados, como em Macapá, no Amapá.
-                </p>
-                <p className="text-slate-700 text-sm leading-6 mt-4">
-                  Minha transição para a área de{" "}
-                  <strong>suporte técnico</strong> aconteceu em 2010, quando
-                  ingressei na Alterdata, onde permaneci por 12 anos. Durante
-                  esse período, desenvolvi habilidades técnicas robustas,
-                  incluindo conhecimento avançado em{" "}
-                  <strong>bancos de dados</strong> e suporte a sistemas.
-                </p>
-                <p className="text-slate-700 text-sm leading-6 mt-4">
-                  A partir de 2019, aprofundei meus conhecimentos em{" "}
-                  <strong>programação</strong> e{" "}
-                  <strong>desenvolvimento full-stack</strong>, dominando
-                  ferramentas modernas como <strong>Next.js</strong>,{" "}
-                  <strong>Prisma</strong>, <strong>ChadCN</strong> e{" "}
-                  <strong>Python</strong>.
-                </p>
-                <p className="text-slate-700 text-sm leading-6 mt-4">
-                  Estou sempre em busca de unir <strong>design</strong> e{" "}
-                  <strong>desenvolvimento</strong> com <strong>inovação</strong>
-                  , criando soluções tecnológicas completas e eficientes. Meu
-                  foco é oferecer um trabalho de alta qualidade, com base em
-                  anos de experiência e uma constante evolução profissional.
-                </p>
+              <AnimatedSection delay={0.2}>
+                <section className="w-full space-y-2 text-sm text-left">
+                  <h2 className="text-primary font-semibold text-xs tracking-wide uppercase">
+                    Próximos Cursos (2026)
+                  </h2>
+                  <ul className="space-y-1">
+                    <li>Terraform </li>
+                    <li>Inglês - Intermediário</li>
+                    <li>Agentes de IA com Python: OpenAI, Hugging Face e LangChain</li>
+                    <li>n8n Impressionador</li>
+                  </ul>
+                </section>
+              </AnimatedSection>
+            </aside>
+
+            <section className="space-y-8 px-4 py-6 sm:px-6 sm:py-8">
+              <div className="no-print flex justify-end">
+                <button
+                  onClick={handlePrimaryAction}
+                  disabled={!ready}
+                  className="btn w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:shadow-md disabled:opacity-50 md:w-auto"
+                >
+                  {actionLabel}
+                </button>
               </div>
-            </AnimatedSection>
 
-            <AnimatedSection delay={0.2}>
-              <div>
-                <h2 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-1 mb-3">
-                  EXPERIÊNCIA PROFISSIONAL
-                </h2>
-                <ul className="text-sm text-slate-700 space-y-3">
-                  <li>
-                    <strong>FreeLancer</strong> — Programação
-                    (2022–2025)
-                    <br />
-                    Construção e implantação de lojas virtuais.
-                  </li>
-                  <li>
-                    <strong>Alterdata Software</strong> — Analista de Suporte
-                    (2010–2022)
-                    <br />
-                    Instalação, implantação e treinamento de sistemas ERP e
-                    automação comercial. Diagnóstico de rede e migração de bases
-                    via Excel → SQL Server / PostgreSQL.
-                  </li>
-                  <li>
-                    <strong>Anny By</strong> — Digitador, Designer Gráfico
-                    (2007–2010)
-                    <br />
-                    Criação de layouts de serigrafia e manipulação de bordados
-                    digitais.
-                  </li>
-                  <li>
-                    <strong>Autônomo</strong> — Designer Gráfico (2000–2006)
-                    <br />
-                    Criação de logomarcas, panfletos e materiais impressos.
-                  </li>
-                  <li>
-                    <strong>Diário do Amapá</strong> — Diagramador (1998–1999)
-                    <br />
-                    Diagramação e tratamento de imagens para mídia impressa.
-                  </li>
-                </ul>
-              </div>
-            </AnimatedSection>
+              <AnimatedSection delay={0.25}>
+                <div className="space-y-3">
+                  <h2 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-1">
+                    Posicionamento Profissional
+                  </h2>
+                  <p className="text-sm leading-relaxed text-slate-700">
+                    Especialista em Tecnologia, Sistemas, Suporte, Consultoria e Desenvolvimento de Soluções Digitais, com mais de 20 anos integrando TI, negócios, vendas, marketing e desenvolvimento. Tenho perfil hands-on, consultivo e orientado a resultados, atuando desde suporte técnico e implantação de ERP até programação, automação, dados e inteligência artificial.
+                  </p>
+                </div>
+              </AnimatedSection>
 
-            <AnimatedSection delay={0.3}>
-              <div>
-                <h2 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-1 mb-3">
-                  QUALIFICAÇÕES E CURSOS
-                </h2>
-                <ul className="text-sm text-slate-700 list-disc ml-6 space-y-1">
-                  <li>Inglês básico</li>
-                  <li>Curso avançado de Excel, Word e Windows</li>
-                  <li>Redes de computadores e manutenção</li>
-                  <li>Digital House — Desenvolvedor Full Stack (227h)</li>
-                </ul>
-              </div>
-            </AnimatedSection>
-          </section>
+              <AnimatedSection delay={0.3}>
+                <div className="space-y-3">
+                  <h2 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-1">
+                    Resumo Executivo
+                  </h2>
+                  <ul className="list-disc space-y-2 pl-5 text-sm text-slate-700">
+                    <li>+12 anos em suporte, implantação, consultoria e treinamento de sistemas ERP Alterdata.</li>
+                    <li>Experiência em vendas consultivas, demonstração técnica comercial e funil de vendas com apoio de marketing digital e tradicional.</li>
+                    <li>Atuação empreendedora em gráfica, sublimação, design e produção visual.</li>
+                    <li>Profissional full stack com domínio em web, APIs, bancos de dados, automações e integrações.</li>
+                    <li>Base sólida em dados, BI, cloud (AWS) e Inteligência Artificial aplicada.</li>
+                    <li>Comunicação clara, visão de negócio e facilidade para atuar com clientes e equipes multidisciplinares.</li>
+                  </ul>
+                </div>
+              </AnimatedSection>
+
+              <AnimatedSection delay={0.35}>
+                <div className="space-y-6 text-sm text-slate-700">
+                  <h2 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-1">
+                    Experiência Profissional
+                  </h2>
+                  <div className="space-y-5">
+                    <ExperienceItem
+                      title="Empreendedor - Tecnologia, Sistemas & Design (Autônomo)"
+                      period="04/2025 - Atual"
+                      items={[
+                        "Desenvolvimento de sites, sistemas, landing pages, lojas virtuais e APIs com integrações ERP.",
+                        "Consultoria, suporte e implantação presencial do sistema Wshop (Alterdata) e soluções sob medida.",
+                        "Produção de materiais gráficos, identidades visuais e atuação estratégica como designer e consultor.",
+                      ]}
+                    />
+                    <ExperienceItem
+                      title="Consultor de Soluções - Alterdata Software"
+                      period="05/08/2024 - 03/04/2025"
+                      items={[
+                        "Prospecção e atendimento consultivo a clientes com demonstrações técnicas e comerciais.",
+                        "Aplicação de funil de vendas, técnicas de persuasão e fechamento com apoio de marketing digital e tradicional.",
+                        "Análise de necessidades e recomendação de soluções adequadas.",
+                      ]}
+                    />
+                    <ExperienceItem
+                      title="Fundador / Proprietário - Oficina do Print - Personalizados & Gráfica"
+                      period="Período"
+                      items={[
+                        "Produção de camisas, canecas, sublimação e estamparia.",
+                        "Criação de artes visuais, materiais gráficos e gestão completa do negócio.",
+                      ]}
+                    />
+                    <ExperienceItem
+                      title="Analista de Suporte - Alterdata Software"
+                      period="2010 - 2022"
+                      items={[
+                        "Instalação, implantação e suporte de ERP e automação comercial com treinamentos presenciais.",
+                        "Diagnóstico de redes, migração de dados via Excel e administração de bancos SQL Server e PostgreSQL.",
+                        "Atendimento remoto e presencial para empresas de diferentes portes.",
+                      ]}
+                    />
+                    <ExperienceItem
+                      title="Digitador / Designer Gráfico - Anny By"
+                      period="2007 - 2010"
+                      items={[
+                        "Criação de layouts para serigrafia e manipulação de bordados digitais.",
+                        "Produção gráfica utilizando Corel Draw e implantação de sistemas.",
+                      ]}
+                    />
+                    <ExperienceItem
+                      title="Designer Gráfico Autônomo"
+                      period="2000 - 2006"
+                      items={[
+                        "Criação de logomarcas, panfletos e identidade visual com Photoshop e Corel Draw.",
+                      ]}
+                    />
+                    <ExperienceItem
+                      title="Diagramador - Diário do Amapá"
+                      period="1998 - 1999"
+                      items={["Diagramação, tratamento de imagens e impressão de fotolitos para jornais."]}
+                    />
+                  </div>
+                </div>
+              </AnimatedSection>
+
+              <AnimatedSection delay={0.4}>
+                <div className="space-y-4 text-sm text-slate-700">
+                  <h2 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-1">
+                    Competências Técnicas
+                  </h2>
+                  <TechnicalList
+                    entries={[
+                      {
+                        title: "Desenvolvimento & Programação",
+                        detail: "Python - Node.js - Next.js - APIs REST - Prisma - shadcn/ui",
+                      },
+                      { title: "Bancos de Dados", detail: "PostgreSQL - SQL Server - Oracle" },
+                      {
+                        title: "Dados & BI",
+                        detail: "Power BI - Excel (Intermediário) - Análise de Dados",
+                      },
+                      {
+                        title: "Cloud & Automação",
+                        detail: "AWS (Hashtag Treinamentos) - n8n - Integrações de sistemas",
+                      },
+                      {
+                        title: "Design & Criação",
+                        detail: "Corel Draw - Canva - Produção gráfica completa",
+                      },
+                      {
+                        title: "Sistemas & ERP",
+                        detail: "Alterdata (suporte, implantação e consultoria) - Wshop",
+                      },
+                    ]}
+                  />
+                </div>
+              </AnimatedSection>
+
+              <AnimatedSection delay={0.45}>
+                <div className="space-y-3 text-sm text-slate-700">
+                  <h2 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-1">
+                    Inteligência Artificial & Dados
+                  </h2>
+                  <ul className="list-disc space-y-2 pl-5">
+                    <li>Agentes de IA com Python (OpenAI, Hugging Face, LangChain)</li>
+                    <li>Inteligência Artificial aplicada a negócios</li>
+                    <li>Automação inteligente de processos</li>
+                  </ul>
+                </div>
+              </AnimatedSection>
+
+              <AnimatedSection delay={0.5}>
+                <div className="space-y-3 text-sm text-slate-700">
+                  <h2 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-1">
+                    Cursos e Certificações
+                  </h2>
+                  <ul className="list-disc space-y-1 pl-5">
+                    <li>Desenvolvedor Full Stack - Digital House (227h)</li>
+                    <li>AWS Impressionador - Hashtag Treinamentos</li>
+                    <li>SQL Impressionador - Hashtag Treinamentos</li>
+                    <li>Python Impressionador - Hashtag Treinamentos</li>
+                    <li>Análise de Dados Impressionadora - Hashtag Treinamentos</li>
+                    <li>Inteligência Artificial Impressionador - Hashtag Treinamentos</li>
+                  </ul>
+                </div>
+              </AnimatedSection>
+
+              <AnimatedSection delay={0.55}>
+                <div className="space-y-3 text-sm text-slate-700">
+                  <h2 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-1">
+                    Perfil Comportamental
+                  </h2>
+                  <ul className="list-disc space-y-1 pl-5">
+                    <li>Visão estratégica de negócio</li>
+                    <li>Comunicação clara com áreas técnicas e não técnicas</li>
+                    <li>Capacidade analítica e resolução de problemas</li>
+                    <li>Perfil consultivo e orientado a resultados</li>
+                    <li>Autonomia, responsabilidade e aprendizado contínuo</li>
+                  </ul>
+                </div>
+              </AnimatedSection>
+            </section>
+          </div>
         </div>
       </div>
     </main>
