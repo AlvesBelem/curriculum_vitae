@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { FaEnvelope, FaGithub, FaLinkedin, FaMapMarkerAlt, FaWhatsapp } from "react-icons/fa";
+import { FaBriefcase, FaEnvelope, FaGithub, FaLinkedin, FaMapMarkerAlt, FaWhatsapp } from "react-icons/fa";
 
 const pdfOptions = {
   margin: 5,
@@ -206,6 +206,17 @@ export default function Page() {
                         className="hover:underline"
                       >
                         linkedin.com/in/alvesbelem
+                      </a>
+                    </li>
+                    <li className="flex flex-wrap items-center gap-2">
+                      <FaBriefcase className="text-white text-base" aria-hidden="true" />
+                      <a
+                        href="https://portfolio.finalizap.com.br/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:underline"
+                      >
+                        Portfólio/in/Marcelo Alves
                       </a>
                     </li>
                     <li className="flex flex-wrap items-center gap-2">
