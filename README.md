@@ -1,5 +1,5 @@
 # Currículo do Marcelo — Next.js (Tailwind + PDF via impressão)
-
+https://ibb.co/1JYTgYn3
 Projeto simples e **estático**. Exibe o currículo e permite **baixar como PDF** (imprimir -> Salvar como PDF).
 
 ## Como rodar
