@@ -244,7 +244,7 @@ export default function Page() {
                     Formação
                   </h2>
                   <ul className="space-y-1">
-                    <li>Análise e Desenvolvimento de Sistemas - UNAMA (3º semestre)</li>
+                    <li>Análise e Desenvolvimento de Sistemas - UNAMA (4º semestre)</li>
                     <li>Ensino Médio Completo</li>
                   </ul>
                 </section>
